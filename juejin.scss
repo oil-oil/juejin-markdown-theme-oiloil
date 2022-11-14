@@ -1,5 +1,41 @@
-$monospace-font: Menlo, Monaco, Consolas, 'Courier New', monospace;
+$monospace-font: Menlo, Monaco, Consolas, "Courier New", monospace;
 $line-space: 22px;
+$primary-pink: #fb7aa5;
+$secondary-pink: #ffe6e9;
+$primary-blue: #5adece;
+$secondary-blue: #edf6f5;
+$transition: 0.35s cubic-bezier(0.25, 0.1, 0, 2.05);
+$box-shadow: rgba(50, 50, 93, 0.15) 0px 2px 5px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px -1px;
+
+@mixin header($level) {
+  &::after {
+    content: "H" + $level;
+    position: absolute;
+    right: -28px;
+    top: -4px;
+    color: $primary-pink;
+    background: linear-gradient(to right, #{$primary-pink}20, #{$primary-pink}60);
+    width: 26px;
+    height: 16px;
+    font-size: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    transform: scale((100 - (($level - 1) * 10))/100);
+    transition: $transition;
+  }
+
+  &:hover::after {
+    transform: scale(1.1);
+  }
+}
+
+::selection {
+  background: $primary-pink;
+  color: white;
+}
 
 .markdown-body {
   word-break: break-word;
@@ -8,6 +44,9 @@ $line-space: 22px;
   font-size: 16px;
   overflow-x: hidden;
   color: #333;
+  background: transparent;
+  font-family: $monospace-font;
+  letter-spacing: 1px;
 
   h1,
   h2,
@@ -15,29 +54,38 @@ $line-space: 22px;
   h4,
   h5,
   h6 {
+    // color: #35a1a7;
+    position: relative;
     line-height: 1.5;
     margin-top: 35px;
     margin-bottom: 10px;
     padding-bottom: 5px;
+    display: table;
+    letter-spacing: 3px;
   }
 
   h1 {
     font-size: 24px;
     margin-bottom: 5px;
-  }
-  h2, h3, h4, h5, h6 {
-    font-size: 20px;
+    @include header(1);
   }
   h2 {
-    padding-bottom: 12px;
-    border-bottom: 1px solid #ececec;
+    font-size: 20px;
+    @include header(2);
   }
   h3 {
-    font-size: 18px;
-    padding-bottom: 0;
+    @include header(3);
   }
+  h4 {
+    @include header(4);
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
   h6 {
-    margin-top: 5px;
+    font-size: 14px;
   }
 
   p {
@@ -48,6 +96,7 @@ $line-space: 22px;
 
   img {
     max-width: 100%;
+    box-shadow: $box-shadow;
   }
 
   hr {
@@ -64,8 +113,8 @@ $line-space: 22px;
     word-break: break-word;
     border-radius: 2px;
     overflow-x: auto;
-    background-color: #fff5f5;
-    color: #ff502c;
+    background-color: $secondary-blue;
+    color: $primary-blue;
     font-size: 0.87em;
     padding: 0.065em 0.4em;
   }
@@ -83,18 +132,48 @@ $line-space: 22px;
       display: block;
       overflow-x: auto;
       color: #333;
-      background: #f8f8f8;
+      background: #{$secondary-pink}30;
     }
   }
 
   a {
+    color: $primary-pink;
+    position: relative;
+    overflow: hidden;
     text-decoration: none;
-    color: #0269c8;
-    border-bottom: 1px solid #d1e9ff;
-    &:hover,
-    &:active {
-      color: #275b8c;
+    font-weight: 500;
+    margin: 0 2px;
+    padding: 0 2px;
+    &::before {
+      content: "#";
     }
+    &::after {
+      content: "";
+      background: #{$primary-pink}50;
+      background: linear-gradient(to right, #{$primary-pink}20, #{$primary-pink}60);
+      position: absolute;
+      left: 12px;
+      bottom: -4px;
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+      z-index: -1;
+      transition: $transition;
+      transform: skewX(5deg);
+      border-radius: 4px;
+    }
+    &:hover::after {
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+    }
+  }
+
+  strong {
+    margin: 0 2px;
+    color: $primary-pink;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.08);
   }
 
   table {
@@ -103,15 +182,18 @@ $line-space: 22px;
     width: auto;
     max-width: 100%;
     overflow: auto;
-    border: solid 1px #f6f6f6;
+    border: solid 1px $primary-pink;
+    border-radius: 4px;
   }
   thead {
-    background: #f6f6f6;
-    color: #000;
+    background: #{$secondary-pink}80;
+    color: $primary-pink;
     text-align: left;
+    font-size: 14px;
+    font-weight: bold;
   }
   tr:nth-child(2n) {
-    background-color: #fcfcfc;
+    background: #{$secondary-pink}80;
   }
   th,
   td {
@@ -125,15 +207,21 @@ $line-space: 22px;
   blockquote {
     color: #666;
     padding: 1px 23px;
-    margin: 22px 0;
-    border-left: 4px solid #cbcbcb;
-    background-color: #f8f8f8;
+    margin: 22px 15px;
+    border-left: 6px solid $primary-pink;
+    background-color: #{$secondary-pink}40;
+    border-radius: 4px;
+    transition: $transition;
     &::after {
       display: block;
-      content: '';
+      content: "";
     }
     & > p {
       margin: 10px 0;
+    }
+
+    &:hover {
+      transform: scale(1.01);
     }
   }
 
@@ -142,7 +230,10 @@ $line-space: 22px;
     padding-left: 28px;
     li {
       margin-bottom: 0;
-      list-style: inherit;
+      &::marker {
+        color: $primary-pink;
+      }
+
       & .task-list-item {
         list-style: none;
         ul,
@@ -160,7 +251,7 @@ $line-space: 22px;
   ol li {
     padding-left: 6px;
   }
-  
+
   .contains-task-list {
     padding-left: 0;
   }
